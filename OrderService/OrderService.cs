@@ -10,7 +10,7 @@ namespace OrderService
             return string.Format("You entered: {0}", value);
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public CompositeType GetDataContract(CompositeType composite)
         {
             if (composite == null)
             {

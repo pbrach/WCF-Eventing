@@ -37,9 +37,10 @@ namespace Host
             serviceHost.AddServiceEndpoint(conf.ContractType, new WSHttpBinding(), "");
 
             //Metadata Exchange
-            ServiceMetadataBehavior serviceBehavior = new ServiceMetadataBehavior();
-            serviceBehavior.HttpGetEnabled = true;
-            serviceHost.Description.Behaviors.Add(serviceBehavior);
+            serviceHost.Description.Behaviors.Add(new ServiceMetadataBehavior
+            {
+                HttpGetEnabled = true
+            });
 
             //Open
             serviceHost.Open();

@@ -9,6 +9,6 @@ namespace SharedServiceContracts
         string GetData(int value);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        CompositeType GetDataContract(CompositeType composite);
     }
 }
