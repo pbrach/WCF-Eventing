@@ -1,6 +1,6 @@
 ﻿namespace SharedServiceContracts
 {
-    class ServiceConfigurations
+    public class ServiceConfigurations
     {
     }
 }

@@ -63,11 +63,6 @@
     <Compile Include="ProductionService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SharedServiceContracts\SharedServiceContracts.csproj">
       <Project>{04005B76-B662-45FB-99F6-B6219367DDFE}</Project>
       <Name>SharedServiceContracts</Name>

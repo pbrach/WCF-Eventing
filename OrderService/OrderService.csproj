@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04005B76-B662-45FB-99F6-B6219367DDFE}</ProjectGuid>
+    <ProjectGuid>{3D6099E0-7E30-47D0-87BF-0D60D557E8D5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharedServiceContracts</RootNamespace>
-    <AssemblyName>SharedServiceContracts</AssemblyName>
+    <RootNamespace>OrderService</RootNamespace>
+    <AssemblyName>OrderService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,8 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,16 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEventingService.cs" />
-    <Compile Include="IOrderService.cs" />
-    <Compile Include="IProductionService.cs" />
+    <Compile Include="OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceConfigurations.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharedBusinessData\SharedBusinessData.csproj">
-      <Project>{359cf927-8013-4647-933c-78d449bd1339}</Project>
-      <Name>SharedBusinessData</Name>
+    <ProjectReference Include="..\SharedServiceContracts\SharedServiceContracts.csproj">
+      <Project>{04005B76-B662-45FB-99F6-B6219367DDFE}</Project>
+      <Name>SharedServiceContracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
