@@ -3,7 +3,7 @@ using SharedServiceContracts;
 
 namespace OrderService
 {
-    public class OrderService: IOrderService
+    public class OrderService : IOrderService
     {
         public string GetData(int value)
         {

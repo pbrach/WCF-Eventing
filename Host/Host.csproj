@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OrderService\OrderService.csproj">
+      <Project>{3D6099E0-7E30-47D0-87BF-0D60D557E8D5}</Project>
+      <Name>OrderService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProductionService\ProductionService.csproj">
       <Project>{371a57f4-f9f1-490d-89a7-67da69ca03d9}</Project>
       <Name>ProductionService</Name>
