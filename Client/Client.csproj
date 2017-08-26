@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{60F487F8-55C4-4C14-B48D-C22BAB90C225}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ServiceEventsWcf</RootNamespace>
-    <AssemblyName>ServiceEventsWcf</AssemblyName>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
