@@ -6,6 +6,12 @@ This solution was developed using
 - Visual Studio 2017 Pro
 - .NET Framwork 4.6.1
 - Used libs: No external libs only .NET WCF
+- port 8081 is hard coded and used for hosting the services
+
+For hosting the services you need admin privileges. There are two ways:
+- simply start Visual Studio as admin
+- use this command in an admin cmd to allow your user to host a service at port 8081: `netsh add urlacl url=http://+:8081/ user=DOMAIN\user`
+
 
 ## How to use
 * Compile the whole solution
