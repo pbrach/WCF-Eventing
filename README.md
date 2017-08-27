@@ -7,6 +7,14 @@ This solution was developed using
 - .NET Framwork 4.6.1
 - Used libs: No external libs only .NET WCF
 
+## How to use
+* Compile the whole solution
+* There are two executable projects: **Host** and **Client**
+* First execute the Host (you need to be admin for that, because you are hosting a web service)
+* Secondly start the Client
+
+The Host starts two WCF services and registers both as listener for the respective other service. The client starts some client requests to verify that the events are correctly executed. The console window of the Host will present a log-like output from the two services, while the client provides some minor status output of the whole system running.
+
 ## Problem
 Event transfer in WCF is mainly organized via WCF-Callbacks.Although this is a nice way it has 1 major downside: callbacks create a duplex channel and keep it open. Because it is a normal channel like every WCF channel, it is (and should be!) disposed after a certain timeout period. For short lived clients (e.g.: web clients) this is perfect solution. 
 
