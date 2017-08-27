@@ -1,51 +1,46 @@
 ﻿using System;
-using SharedBusinessData.InstanceData;
 using System.Collections.Generic;
-using System.ServiceModel;
+using SharedBusinessData;
 
 namespace SharedServiceContracts
 {
-    [ServiceContract]
-    public abstract class BaseEventingService
+    public abstract class BaseEventingService : IBaseEventingService
     {
-        private static readonly Dictionary<Type, List<Type>> ListenerIds = new Dictionary<Type, List<Type>>(); //EventType, ServiceType
+        private static readonly Dictionary<WcfEvents.EventName, List<ServiceConfigurations.ServiceName>> ListenerIds =
+            new Dictionary<WcfEvents.EventName, List<ServiceConfigurations.ServiceName>>(); //EventType, ServiceType
 
-        [OperationContract]
-        public void RegisterListener(Type eventType, Type listenerType)
+        public void RegisterListener(WcfEvents.EventName eventName, ServiceConfigurations.ServiceName listenerName)
         {
+            Console.WriteLine("{2}: listens to: [{0}] and [{1}Event]", listenerName, eventName, GetType().Name);
+            var eventType = WcfEvents.GetEventType(eventName);
             if (!eventType.IsSubclassOf(typeof(BaseEvent)))
             {
                 throw new Exception("Invalid event registration");
             }
 
-            if (!ListenerIds.ContainsKey(eventType))
+            if (!ListenerIds.ContainsKey(eventName))
             {
-                ListenerIds[eventType] = new List<Type> {listenerType};
+                ListenerIds[eventName] = new List<ServiceConfigurations.ServiceName> { listenerName };
             }
 
-            ListenerIds[eventType].Add(listenerType);
+            ListenerIds[eventName].Add(listenerName);
         }
 
 
-        [OperationContract]
         public abstract void HandleEvent(BaseEvent inEvent);
 
         protected void FireEvent(BaseEvent newEvent)
         {
-            var listenerForEvent = ListenerIds[newEvent.GetType()];
+            var eventName = WcfEvents.GetEventName(newEvent);
+            Console.WriteLine("{1}: Firing event {0}", eventName, GetType().Name);
 
-            foreach (var listenerType in listenerForEvent)
+            var listeningServices = ListenerIds[eventName];
+
+            foreach (var serviceName in listeningServices)
             {
-                var listener = getListener(listenerType);
+                var listener = ServiceConfigurations.CreateEventingClient(serviceName);
                 listener.HandleEvent(newEvent);
             }
-        }
-
-        // TODO: implement getting the correct service from the ServiceType
-        // Preconditions: Binding and Endpoint is known for each service
-        private BaseEventingService getListener(Type serviceType)
-        {
-            return (BaseEventingService)new object();
         }
     }
 }

@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +48,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedBusinessData\SharedBusinessData.csproj">
+      <Project>{359cf927-8013-4647-933c-78d449bd1339}</Project>
+      <Name>SharedBusinessData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharedServiceContracts\SharedServiceContracts.csproj">
+      <Project>{04005b76-b662-45fb-99f6-b6219367ddfe}</Project>
+      <Name>SharedServiceContracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

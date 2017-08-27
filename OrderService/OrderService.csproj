@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharedBusinessData\SharedBusinessData.csproj">
+      <Project>{359cf927-8013-4647-933c-78d449bd1339}</Project>
+      <Name>SharedBusinessData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedServiceContracts\SharedServiceContracts.csproj">
       <Project>{04005B76-B662-45FB-99F6-B6219367DDFE}</Project>
       <Name>SharedServiceContracts</Name>

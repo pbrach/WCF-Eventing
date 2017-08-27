@@ -1,38 +1,15 @@
-﻿using System.Runtime.Serialization;
-using System.ServiceModel;
+﻿using System.ServiceModel;
+using SharedBusinessData;
 
 namespace SharedServiceContracts
 {
     [ServiceContract]
-    public interface IProductionService
+    public interface IProductionService : IBaseEventingService
     {
         [OperationContract]
-        string GetData(int value);
+        void SetProcessingQuality(ProductionQuality quality);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        // TODO: Add your service operations here
-    }
-
-    [DataContract]
-    public class CompositeType
-    {
-        bool boolValue = true;
-        string stringValue = "Hello ";
-
-        [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
-
-        [DataMember]
-        public string StringValue
-        {
-            get { return stringValue; }
-            set { stringValue = value; }
-        }
+        void SetProcessingSpeed(ProductionSpeed speed);
     }
 }

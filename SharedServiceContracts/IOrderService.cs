@@ -1,14 +1,16 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
+using SharedBusinessData;
 
 namespace SharedServiceContracts
 {
     [ServiceContract]
-    public interface IOrderService
+    public interface IOrderService : IBaseEventingService
     {
         [OperationContract]
-        string GetData(int value);
+        void RegisterNewOrder(Order order);
 
         [OperationContract]
-        CompositeType GetDataContract(CompositeType composite);
+        List<Order> GetAllOrdersWithStatus();
     }
 }

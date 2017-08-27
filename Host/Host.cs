@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using SharedBusinessData;
 using SharedServiceContracts;
 
 namespace Host
@@ -9,16 +10,22 @@ namespace Host
     {
         public static void Main(string[] args)
         {
-            ServiceConfigurations.registeredServices.Find(x => x.ContractType == typeof(IProductionService)).RealType = typeof(ProductionService.ProductionService);
-            ServiceConfigurations.registeredServices.Find(x => x.ContractType == typeof(IOrderService)).RealType = typeof(OrderService.OrderService);
+            ServiceConfigurations.ServiceConfigMapping[ServiceConfigurations.ServiceName.ProductionService].RealType = typeof(ProductionService.ProductionService);
+            ServiceConfigurations.ServiceConfigMapping[ServiceConfigurations.ServiceName.OrderService].RealType = typeof(OrderService.OrderService);
 
             try
             {
-                foreach (var serviceConf in ServiceConfigurations.registeredServices)
+                foreach (var dictItem in ServiceConfigurations.ServiceConfigMapping)
                 {
-                    HostService(serviceConf);
+                    StartHosting(dictItem.Value);
                 }
 
+                var productionService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.ProductionService);
+                productionService.RegisterListener(WcfEvents.EventName.OrderFinished, ServiceConfigurations.ServiceName.OrderService);
+                productionService.RegisterListener(WcfEvents.EventName.ProductFinished, ServiceConfigurations.ServiceName.OrderService);
+
+                var orderService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.OrderService);
+                orderService.RegisterListener(WcfEvents.EventName.NewOrderAccepted, ServiceConfigurations.ServiceName.ProductionService);
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -28,7 +35,7 @@ namespace Host
             }
         }
 
-        private static void HostService(IndividualConfiguration conf)
+        private static void StartHosting(IndividualConfiguration conf)
         {
             //Instantiate ServiceHost
             var serviceHost = new ServiceHost(conf.RealType, conf.HttpBaseAddress);

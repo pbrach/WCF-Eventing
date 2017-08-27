@@ -1,49 +1,81 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace SharedBusinessData.InstanceData
+namespace SharedBusinessData
 {
-    [DataContract]
-    [KnownType(typeof(NewOrderPublished))]
-    public abstract class BaseEvent
-    {}
+
+
+    public static class WcfEvents
+    {
+        public enum EventName
+        {
+            NewOrderAccepted,
+            OrderFinished,
+            ProductFinished,
+            Undefined
+        }
+
+        public static Type GetEventType(EventName eventName)
+        {
+            switch (eventName)
+            {
+                case EventName.NewOrderAccepted:
+                    return typeof(NewOrderAccepted);
+
+                case EventName.OrderFinished:
+                    return typeof(OrderFinished);
+
+                case EventName.ProductFinished:
+                    return typeof(ProductFinished);
+
+                default:
+                    return null;
+            }
+        }
+
+        public static EventName GetEventName(BaseEvent inevent)
+        {
+            EventName result;
+
+            var success = EventName.TryParse(inevent.GetType().Name, true, out result);
+
+            return success ? result : EventName.Undefined;
+        }
+    }
+
+
 
     [DataContract]
-    public class NewOrderPublished : BaseEvent
+    [KnownType(typeof(NewOrderAccepted))]
+    [KnownType(typeof(OrderFinished))]
+    [KnownType(typeof(ProductFinished))]
+    public abstract class BaseEvent
+    { }
+
+    [DataContract]
+    public class NewOrderAccepted : BaseEvent
     {
         [DataMember]
-        public ProcessingQuality Quality;
-
-        [DataMember]
-        public ProcessingSpeed Speed;
-
-        [DataMember]
-        public int Quantity;
+        public Order InOrder;
     }
 
     [DataContract]
     public class OrderFinished : BaseEvent
     {
         [DataMember]
-        public TimeSpan TimeNeeded;
+        public ProductionBatch FinishedBatch;
 
         [DataMember]
-        public int BatchId;
-
-        [DataMember]
-        public string ProductionLineId;
+        public int OriginalOrderId;
     }
 
     [DataContract]
-    public class SubOrderFinished : BaseEvent
+    public class ProductFinished : BaseEvent
     {
         [DataMember]
-        public TimeSpan TimeNeeded;
+        public Product FinishedProduct;
 
         [DataMember]
-        public ProcessingQuality Quality;
-
-        [DataMember]
-        public int ProductId;
+        public int OriginalOrderId;
     }
 }

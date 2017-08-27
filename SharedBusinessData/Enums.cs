@@ -1,20 +1,43 @@
 ﻿using System.Runtime.Serialization;
 
-namespace SharedBusinessData.InstanceData
+namespace SharedBusinessData
 {
     [DataContract]
-    public enum ProcessingQuality
+    public enum ProductionQuality
     {
+        [EnumMember]
         High,
+        [EnumMember]
         Medium,
-        Low
+        [EnumMember]
+        Low,
+        [EnumMember]
+        Undefined
     }
 
     [DataContract]
-    public enum ProcessingSpeed
+    public enum ProductionSpeed
     {
+        [EnumMember]
         Fast,
+        [EnumMember]
         Medium,
-        Slow
+        [EnumMember]
+        Slow,
+        [EnumMember]
+        Undefined
+    }
+
+    [DataContract]
+    public enum OrderStatus
+    {
+        [EnumMember]
+        New,
+        [EnumMember]
+        Processing,
+        [EnumMember]
+        Finished,
+        [EnumMember]
+        Undefined
     }
 }

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEventingService.cs" />
+    <Compile Include="IBaseEventingService.cs" />
     <Compile Include="IOrderService.cs" />
     <Compile Include="IProductionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

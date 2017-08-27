@@ -1,26 +1,74 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using SharedBusinessData;
 using SharedServiceContracts;
 
 namespace OrderService
 {
-    public class OrderService : IOrderService
+    [ServiceBehavior(
+        ConcurrencyMode = ConcurrencyMode.Multiple,
+        InstanceContextMode = InstanceContextMode.Single
+    )]
+    public class OrderService : BaseEventingService, IOrderService
     {
-        public string GetData(int value)
+        private static readonly List<Order> _registeredOrders = new List<Order>();
+
+        public void RegisterNewOrder(Order order)
         {
-            return string.Format("You entered: {0}", value);
+            Console.WriteLine("OrderSevice, Call to RegisterNewOrder");
+
+            _registeredOrders.Add(order);
+            this.FireEvent(new NewOrderAccepted
+            {
+                InOrder = order
+            });
         }
 
-        public CompositeType GetDataContract(CompositeType composite)
+        public List<Order> GetAllOrdersWithStatus()
         {
-            if (composite == null)
+            Console.WriteLine("OrderSevice, Call to GetAllOrdersWithStatus");
+            return _registeredOrders;
+        }
+
+
+
+
+
+        /// <summary>
+        /// General EventHandler (more like an EventHub)
+        /// </summary>
+        public override void HandleEvent(BaseEvent inEvent)
+        {
+            if (inEvent is ProductFinished)
             {
-                throw new ArgumentNullException("composite");
+                HandleSubOrderFinishedd((ProductFinished)inEvent);
             }
-            if (composite.BoolValue)
+            else if (inEvent is OrderFinished)
             {
-                composite.StringValue += "Suffix";
+                HandleOrderFinished((OrderFinished)inEvent);
             }
-            return composite;
+        }
+
+        // Handler for the OrderFinished Event
+        private void HandleOrderFinished(OrderFinished orderFinishedEvent)
+        {
+            var orderToUpate = _registeredOrders.First(x => x.Id == orderFinishedEvent.OriginalOrderId);
+            orderToUpate.Status = OrderStatus.Finished;
+            Console.WriteLine("OrderSevice, Handling OrderFinished");
+        }
+
+        // Handler for the ProductFinished Event
+        private void HandleSubOrderFinishedd(ProductFinished productFinishedEvent)
+        {
+            Console.WriteLine("OrderSevice, Handling ProductFinished");
+            var orderToUpate = _registeredOrders.First(x => x.Id == productFinishedEvent.OriginalOrderId);
+
+            if (orderToUpate.Status == OrderStatus.New)
+            {
+                orderToUpate.Status = OrderStatus.Processing;
+            }
         }
     }
 }
