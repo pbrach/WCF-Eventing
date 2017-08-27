@@ -74,7 +74,7 @@ namespace ProductionService
             var products = new List<Product>();
             for (var i = 1; i <= InOrder.Quantity; i++)
             {
-                products.Add(ProduceNewProduct());
+                products.Add(ProduceNewProduct(InOrder.Id));
             }
 
             return new ProductionBatch
@@ -84,17 +84,25 @@ namespace ProductionService
             };
         }
 
-        private Product ProduceNewProduct()
+        private Product ProduceNewProduct(int orderId)
         {
             var neededTime = GetCurrentProductionTime();
             Thread.Sleep(neededTime);
 
-            return new Product
+            var newProduct = new Product
             {
                 Quality = _selectedQuality,
                 ProductionTime = GetCurrentProductionTime(),
                 ProductId = _selectedQuality.ToString() + _selectedSpeed
             };
+
+            FireEvent(new ProductFinished
+            {
+                OriginalOrderId = orderId,
+                FinishedProduct = newProduct
+            });
+
+            return newProduct;
         }
 
         private TimeSpan GetCurrentProductionTime()

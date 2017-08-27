@@ -21,6 +21,7 @@ namespace SharedServiceContracts
             if (!ListenerIds.ContainsKey(eventName))
             {
                 ListenerIds[eventName] = new List<ServiceConfigurations.ServiceName> { listenerName };
+                return;
             }
 
             ListenerIds[eventName].Add(listenerName);

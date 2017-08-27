@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.ServiceModel;
+using System.Threading;
 using SharedBusinessData;
 using SharedServiceContracts;
 
@@ -14,16 +16,35 @@ namespace ServiceEventsWcf
             productionClient.SetProcessingSpeed(ProductionSpeed.Fast);
 
             var orderClient = (IOrderService)CreateClient(ServiceConfigurations.ServiceName.OrderService);
-            orderClient.RegisterNewOrder(new Order
+
+
+            var thr = new Thread(() =>
             {
-                Id = 1,
-                Status = OrderStatus.New,
-                Quality = ProductionQuality.Medium,
-                Speed = ProductionSpeed.Fast,
-                Quantity = 5
+                orderClient.RegisterNewOrder(new Order
+                {
+                    Id = 1,
+                    Status = OrderStatus.New,
+                    Quality = ProductionQuality.Medium,
+                    Speed = ProductionSpeed.Fast,
+                    Quantity = 5
+                });
             });
+            thr.Start();
+            Console.WriteLine("Started Production");
 
-
+            var statusOrderClient = (IOrderService)CreateClient(ServiceConfigurations.ServiceName.OrderService);
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            while (watch.Elapsed.Seconds < 5)
+            {
+                var orders = statusOrderClient.GetAllOrdersWithStatus();
+                foreach (var order in orders)
+                {
+                    Console.Write("[ID: {0}, Status: {1}]", order.Id, order.Status);
+                }
+                Console.WriteLine();
+                Thread.Sleep(500);
+            }
             Console.ReadLine();
         }
 
