@@ -1,5 +1,5 @@
 # WCF-Eventing
-A mid-weight eventing solution fo WCF. Implemented using an Observer pattern. This project exists mainly for teaching/learning purposes.
+A mid-weight eventing solution fo WCF. Implemented using an Observer pattern. This project exists mainly for teaching/learning purposes, as the implementation is somewhat simple and not optimized. So take this as a general idea of how such a system could be realized, but definitely not as something that is production ready.
 
 ## Requirements
 This solution was developed using
