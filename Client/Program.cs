@@ -32,6 +32,7 @@ namespace ServiceEventsWcf
             thr.Start();
             Console.WriteLine("Started Production");
 
+
             var statusOrderClient = (IOrderService)CreateClient(ServiceConfigurations.ServiceName.OrderService);
             Stopwatch watch = new Stopwatch();
             watch.Start();
