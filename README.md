@@ -1,6 +1,10 @@
 # WCF-Eventing
 A mid-weight eventing solution fo WCF. Implemented using an Observer pattern. This project exists mainly for teaching/learning purposes, as the implementation is somewhat simple and not optimized. So take this as a general idea of how such a system could be realized, but definitely not as something that is production ready.
 
+## Solution Structure ##
+Important for the solution design is the separatation of service logic and implementation details from the client. Thus only the service contracts and the data contracts are allowed to be shared between the service hosting and client domain.
+![solution structure](https://github.com/pbrach/WCF-Eventing/blob/master/Dependencies%20Graph.png)
+
 ## Requirements
 This solution was developed using
 - Visual Studio 2017 Pro
