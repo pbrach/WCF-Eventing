@@ -35,37 +35,23 @@ namespace OrderService
 
         public override void InitEventListening()
         {
-            var productionService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.ProductionService);
-            productionService.RegisterListener(WcfEvents.EventName.OrderFinished, ServiceConfigurations.ServiceName.OrderService);
-            productionService.RegisterListener(WcfEvents.EventName.ProductFinished, ServiceConfigurations.ServiceName.OrderService);
-        }
-
-        /// <summary>
-        /// General EventHandler (more like an EventHub)
-        /// </summary>
-        public override void HandleEvent(BaseEvent inEvent)
-        {
-            if (inEvent is ProductFinished)
-            {
-                HandleSubOrderFinishedd((ProductFinished)inEvent);
-            }
-            else if (inEvent is OrderFinished)
-            {
-                HandleOrderFinished((OrderFinished)inEvent);
-            }
+            ListenTo(ServiceConfigurations.ServiceName.OrderService, WcfEvents.EventName.OrderFinished, HandleOrderFinished);
+            ListenTo(ServiceConfigurations.ServiceName.OrderService, WcfEvents.EventName.ProductFinished, HandleSubOrderFinished);
         }
 
         // Handler for the OrderFinished Event
-        private void HandleOrderFinished(OrderFinished orderFinishedEvent)
+        private void HandleOrderFinished(BaseEvent inEvent)
         {
+            var orderFinishedEvent = (OrderFinished)inEvent;
             var orderToUpate = _registeredOrders.First(x => x.Id == orderFinishedEvent.OriginalOrderId);
             orderToUpate.Status = OrderStatus.Finished;
             Console.WriteLine("OrderSevice, Handling OrderFinished");
         }
 
         // Handler for the ProductFinished Event
-        private void HandleSubOrderFinishedd(ProductFinished productFinishedEvent)
+        private void HandleSubOrderFinished(BaseEvent inEvent)
         {
+            var productFinishedEvent = (ProductFinished)inEvent;
             Console.WriteLine("OrderSevice, Handling ProductFinished");
             var orderToUpate = _registeredOrders.First(x => x.Id == productFinishedEvent.OriginalOrderId);
 

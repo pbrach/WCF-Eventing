@@ -37,31 +37,24 @@ namespace ProductionService
 
         public override void InitEventListening()
         {
-            var orderService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.OrderService);
-            orderService.RegisterListener(WcfEvents.EventName.NewOrderAccepted, ServiceConfigurations.ServiceName.ProductionService);
+            ListenTo<NewOrderAccepted>(ServiceConfigurations.ServiceName.ProductionService, WcfEvents.EventName.NewOrderAccepted, HandleNewOrderAccepted);
         }
 
-        public override void HandleEvent(BaseEvent inEvent)
-        {
-            if (inEvent is NewOrderAccepted)
-            {
-                HandleNewOrderAccepted((NewOrderAccepted)inEvent);
-            }
-        }
 
-        private void HandleNewOrderAccepted(NewOrderAccepted inEvent)
+        private void HandleNewOrderAccepted(NewOrderAccepted newOrderAcceptedEvent)
         {
             Console.WriteLine("Production Service, Handling 'NewOrderAccepted' event");
-            if (!CanProcessOrder(inEvent.InOrder))
+
+            if (!CanProcessOrder(newOrderAcceptedEvent.InOrder))
             {
                 return;
             }
 
-            var batch = ProduceOrder(inEvent.InOrder);
+            var batch = ProduceOrder(newOrderAcceptedEvent.InOrder);
 
             FireEvent(new OrderFinished
             {
-                OriginalOrderId = inEvent.InOrder.Id,
+                OriginalOrderId = newOrderAcceptedEvent.InOrder.Id,
                 FinishedBatch = batch
             });
         }

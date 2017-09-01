@@ -22,7 +22,8 @@ namespace SharedServiceContracts
         public enum ServiceName
         {
             ProductionService,
-            OrderService
+            OrderService,
+            Undefined
         }
 
         public static Dictionary<ServiceName, IndividualConfiguration> ServiceConfigMapping =
