@@ -11,12 +11,15 @@ namespace ServiceEventsWcf
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Started Client");
             var productionClient = (IProductionService)CreateClient(ServiceConfigurations.ServiceName.ProductionService);
             productionClient.SetProcessingQuality(ProductionQuality.Medium);
             productionClient.SetProcessingSpeed(ProductionSpeed.Fast);
+            Console.WriteLine("Configured the Production Line");
+
 
             var orderClient = (IOrderService)CreateClient(ServiceConfigurations.ServiceName.OrderService);
-
+            Console.WriteLine("Created OrderService handle");
 
             var thr = new Thread(() =>
             {

@@ -57,5 +57,19 @@ namespace SharedServiceContracts
 
             return new ChannelFactory<IBaseEventingService>(binding, endpoint).CreateChannel();
         }
+
+        public static ServiceName ParseServiceName(Type inType)
+        {
+            var thisName = inType.Name;
+
+            ServiceName thisServiceEnum;
+
+            if (!Enum.TryParse(thisName, true, out thisServiceEnum))
+            {
+                thisServiceEnum = ServiceName.Undefined;
+            }
+
+            return thisServiceEnum;
+        }
     }
 }

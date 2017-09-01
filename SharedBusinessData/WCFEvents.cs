@@ -37,10 +37,20 @@ namespace SharedBusinessData
         {
             EventName result;
 
-            var success = EventName.TryParse(inevent.GetType().Name, true, out result);
+            var success = Enum.TryParse(inevent.GetType().Name, true, out result);
 
             return success ? result : EventName.Undefined;
         }
+
+        public static EventName GetEventName(Type intype)
+        {
+            EventName result;
+
+            var success = Enum.TryParse(intype.Name, true, out result);
+
+            return success ? result : EventName.Undefined;
+        }
+
     }
 
 

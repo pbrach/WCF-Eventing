@@ -29,7 +29,12 @@ namespace SharedServiceContracts
             ListenerIds[eventName].Add(listenerName);
         }
 
-        public abstract void InitEventListening();
+        public void InitEventListening()
+        {
+            InnerInitEventListening();
+        }
+
+        protected abstract void InnerInitEventListening();
 
         protected void FireEvent(BaseEvent newEvent)
         {
@@ -63,13 +68,13 @@ namespace SharedServiceContracts
 
 
         protected void ListenTo<TEvent>(
-            ServiceConfigurations.ServiceName serviceName,
-            WcfEvents.EventName eventName,
-            Action<TEvent> handlingMethod) where TEvent : BaseEvent
+            ServiceConfigurations.ServiceName otherServiceName,
+            Action<BaseEvent> handlingMethod) where TEvent : BaseEvent
         {
-            RegisterMeAsListener(serviceName, eventName);
-
             var eventType = typeof(TEvent);
+
+            RegisterMeAsListener(otherServiceName, eventType);
+
             List<Action<BaseEvent>> handlerList;
 
             if (!_handlerActions.ContainsKey(eventType))
@@ -86,17 +91,13 @@ namespace SharedServiceContracts
         }
 
 
-        private void RegisterMeAsListener(ServiceConfigurations.ServiceName serviceName, WcfEvents.EventName eventName)
+        private void RegisterMeAsListener(ServiceConfigurations.ServiceName otherServiceName, Type eventType)
         {
-            var otherService = ServiceConfigurations.CreateEventingClient(serviceName);
+            var otherService = ServiceConfigurations.CreateEventingClient(otherServiceName);
 
-            var thisName = GetType().Name;
+            var eventName = WcfEvents.GetEventName(eventType);
 
-            ServiceConfigurations.ServiceName thisServiceEnum;
-            if (Enum.TryParse(thisName, true, out thisServiceEnum))
-            {
-                thisServiceEnum = ServiceConfigurations.ServiceName.Undefined;
-            }
+            var thisServiceEnum = ServiceConfigurations.ParseServiceName(GetType());
 
             otherService.RegisterListener(eventName, thisServiceEnum);
         }

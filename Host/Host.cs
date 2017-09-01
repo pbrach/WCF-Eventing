@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using SharedBusinessData;
 using SharedServiceContracts;
 
 namespace Host

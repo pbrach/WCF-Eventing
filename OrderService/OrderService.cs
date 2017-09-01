@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel;
 using SharedBusinessData;
 using SharedServiceContracts;
+using ServiceName = SharedServiceContracts.ServiceConfigurations.ServiceName;
 
 namespace OrderService
 {
@@ -13,14 +14,14 @@ namespace OrderService
     )]
     public class OrderService : BaseEventingService, IOrderService
     {
-        private static readonly List<Order> _registeredOrders = new List<Order>();
+        private static readonly List<Order> RegisteredOrders = new List<Order>();
 
         public void RegisterNewOrder(Order order)
         {
             Console.WriteLine("OrderSevice, Call to RegisterNewOrder");
 
-            _registeredOrders.Add(order);
-            this.FireEvent(new NewOrderAccepted
+            RegisteredOrders.Add(order);
+            FireEvent(new NewOrderAccepted
             {
                 InOrder = order
             });
@@ -29,23 +30,25 @@ namespace OrderService
         public List<Order> GetAllOrdersWithStatus()
         {
             Console.WriteLine("OrderSevice, Call to GetAllOrdersWithStatus");
-            return _registeredOrders;
+            return RegisteredOrders;
         }
 
 
-        public override void InitEventListening()
+        protected override void InnerInitEventListening()
         {
-            ListenTo(ServiceConfigurations.ServiceName.OrderService, WcfEvents.EventName.OrderFinished, HandleOrderFinished);
-            ListenTo(ServiceConfigurations.ServiceName.OrderService, WcfEvents.EventName.ProductFinished, HandleSubOrderFinished);
+            ListenTo<OrderFinished>(ServiceName.ProductionService, HandleOrderFinished);
+            ListenTo<ProductFinished>(ServiceName.ProductionService, HandleSubOrderFinished);
         }
 
         // Handler for the OrderFinished Event
         private void HandleOrderFinished(BaseEvent inEvent)
         {
             var orderFinishedEvent = (OrderFinished)inEvent;
-            var orderToUpate = _registeredOrders.First(x => x.Id == orderFinishedEvent.OriginalOrderId);
-            orderToUpate.Status = OrderStatus.Finished;
             Console.WriteLine("OrderSevice, Handling OrderFinished");
+
+            var orderToUpate = RegisteredOrders.First(x => x.Id == orderFinishedEvent.OriginalOrderId);
+            orderToUpate.Status = OrderStatus.Finished;
+
         }
 
         // Handler for the ProductFinished Event
@@ -53,7 +56,8 @@ namespace OrderService
         {
             var productFinishedEvent = (ProductFinished)inEvent;
             Console.WriteLine("OrderSevice, Handling ProductFinished");
-            var orderToUpate = _registeredOrders.First(x => x.Id == productFinishedEvent.OriginalOrderId);
+
+            var orderToUpate = RegisteredOrders.First(x => x.Id == productFinishedEvent.OriginalOrderId);
 
             if (orderToUpate.Status == OrderStatus.New)
             {

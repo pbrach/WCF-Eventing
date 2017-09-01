@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Threading;
 using SharedBusinessData;
 using SharedServiceContracts;
+using ServiceName = SharedServiceContracts.ServiceConfigurations.ServiceName;
 
 namespace ProductionService
 {
@@ -35,16 +36,18 @@ namespace ProductionService
             Console.WriteLine("Production Service, Changed Speed to: " + _selectedSpeed);
         }
 
-        public override void InitEventListening()
+        protected override void InnerInitEventListening()
         {
-            ListenTo<NewOrderAccepted>(ServiceConfigurations.ServiceName.ProductionService, WcfEvents.EventName.NewOrderAccepted, HandleNewOrderAccepted);
+            ListenTo<NewOrderAccepted>(ServiceName.OrderService, HandleNewOrderAccepted);
         }
 
 
-        private void HandleNewOrderAccepted(NewOrderAccepted newOrderAcceptedEvent)
+
+        private void HandleNewOrderAccepted(BaseEvent inEvent)
         {
             Console.WriteLine("Production Service, Handling 'NewOrderAccepted' event");
 
+            NewOrderAccepted newOrderAcceptedEvent = (NewOrderAccepted)inEvent;
             if (!CanProcessOrder(newOrderAcceptedEvent.InOrder))
             {
                 return;
@@ -67,13 +70,12 @@ namespace ProductionService
                 inEventInOrder.Speed == _selectedSpeed;
         }
 
-
-        private ProductionBatch ProduceOrder(Order InOrder)
+        private ProductionBatch ProduceOrder(Order inOrder)
         {
             var products = new List<Product>();
-            for (var i = 1; i <= InOrder.Quantity; i++)
+            for (var i = 1; i <= inOrder.Quantity; i++)
             {
-                products.Add(ProduceNewProduct(InOrder.Id));
+                products.Add(ProduceNewProduct(inOrder.Id));
             }
 
             return new ProductionBatch
