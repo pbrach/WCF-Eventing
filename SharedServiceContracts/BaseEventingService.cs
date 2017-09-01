@@ -11,7 +11,7 @@ namespace SharedServiceContracts
 
         public void RegisterListener(WcfEvents.EventName eventName, ServiceConfigurations.ServiceName listenerName)
         {
-            Console.WriteLine("{2}: listens to: [{0}] and [{1}Event]", listenerName, eventName, GetType().Name);
+            Console.WriteLine("{0}: listens to: [{2}] and [{1}Event]", listenerName, eventName, GetType().Name);
             var eventType = WcfEvents.GetEventType(eventName);
             if (!eventType.IsSubclassOf(typeof(BaseEvent)))
             {
@@ -27,6 +27,7 @@ namespace SharedServiceContracts
             ListenerIds[eventName].Add(listenerName);
         }
 
+        public abstract void InitEventListening();
 
         public abstract void HandleEvent(BaseEvent inEvent);
 

@@ -20,12 +20,12 @@ namespace Host
                     StartHosting(dictItem.Value);
                 }
 
-                var productionService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.ProductionService);
-                productionService.RegisterListener(WcfEvents.EventName.OrderFinished, ServiceConfigurations.ServiceName.OrderService);
-                productionService.RegisterListener(WcfEvents.EventName.ProductFinished, ServiceConfigurations.ServiceName.OrderService);
+                foreach (var dictItem in ServiceConfigurations.ServiceConfigMapping)
+                {
+                    var service = ServiceConfigurations.CreateEventingClient(dictItem.Key);
+                    service.InitEventListening();
+                }
 
-                var orderService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.OrderService);
-                orderService.RegisterListener(WcfEvents.EventName.NewOrderAccepted, ServiceConfigurations.ServiceName.ProductionService);
                 Console.ReadKey();
             }
             catch (Exception ex)

@@ -33,8 +33,12 @@ namespace OrderService
         }
 
 
-
-
+        public override void InitEventListening()
+        {
+            var productionService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.ProductionService);
+            productionService.RegisterListener(WcfEvents.EventName.OrderFinished, ServiceConfigurations.ServiceName.OrderService);
+            productionService.RegisterListener(WcfEvents.EventName.ProductFinished, ServiceConfigurations.ServiceName.OrderService);
+        }
 
         /// <summary>
         /// General EventHandler (more like an EventHub)

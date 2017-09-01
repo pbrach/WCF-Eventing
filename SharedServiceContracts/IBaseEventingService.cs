@@ -8,6 +8,9 @@ namespace SharedServiceContracts
     public interface IBaseEventingService
     {
         [OperationContract]
+        void InitEventListening();
+
+        [OperationContract]
         void HandleEvent(BaseEvent inEvent);
 
         [OperationContract]

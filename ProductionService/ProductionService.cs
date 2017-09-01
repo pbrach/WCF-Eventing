@@ -35,6 +35,12 @@ namespace ProductionService
             Console.WriteLine("Production Service, Changed Speed to: " + _selectedSpeed);
         }
 
+        public override void InitEventListening()
+        {
+            var orderService = ServiceConfigurations.CreateEventingClient(ServiceConfigurations.ServiceName.OrderService);
+            orderService.RegisterListener(WcfEvents.EventName.NewOrderAccepted, ServiceConfigurations.ServiceName.ProductionService);
+        }
+
         public override void HandleEvent(BaseEvent inEvent)
         {
             if (inEvent is NewOrderAccepted)
