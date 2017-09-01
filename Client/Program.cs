@@ -36,7 +36,7 @@ namespace ServiceEventsWcf
             var statusOrderClient = (IOrderService)CreateClient(ServiceConfigurations.ServiceName.OrderService);
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            while (watch.Elapsed.Seconds < 5)
+            while (watch.Elapsed.Seconds < 10)
             {
                 var orders = statusOrderClient.GetAllOrdersWithStatus();
                 foreach (var order in orders)

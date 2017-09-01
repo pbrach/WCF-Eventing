@@ -3,7 +3,7 @@ A mid-weight eventing solution fo WCF. Implemented using an Observer pattern. Th
 
 ## Solution Structure ##
 Important for the solution design is the separatation of service logic and implementation details from the client. Thus only the service contracts and the data contracts are allowed to be shared between the service hosting and client domain.
-![solution structure](https://github.com/pbrach/WCF-Eventing/blob/master/Dependencies%20Graph.png)
+![solution structure](Dependencies%20Graph.png)
 
 ## Requirements
 This solution was developed using
